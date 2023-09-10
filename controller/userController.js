@@ -7,7 +7,7 @@ exports.signup = async (req, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      const err = {};
+      let err = {};
       errors.array().forEach((error) => {
         err[error.path] = error.msg;
       });

@@ -1,16 +1,21 @@
 const express = require("express");
 const userRouter = require("./routes/userRoutes");
+const authController = require("./controller/authController");
+
 const app = express();
 
-app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  const { value } = req.body;
-  const result = /^[A-Z](?:\d[- ]*){14}$/.test(value);
-  res.send(result);
-});
+app.use(authController.checkAccessToken);
+app.use(authController.IsAdmin);
 
 app.use("/api/v1/user", userRouter);
+
+app.all("*", (req, res) => {
+  res.status(404).json({
+    status: "fail",
+    message: `Requested page ${req.url} not found`,
+  });
+});
 
 module.exports = app;
