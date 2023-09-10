@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
-const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
+const User = require("../models/userModel");
 
 exports.signup = async (req, res) => {
   try {
@@ -16,7 +16,7 @@ exports.signup = async (req, res) => {
 
     let data = { ...req.body };
     const hashedPassword = await bcrypt.hash(data.password, 10);
-    data = { ...data, password: hashedPassword };
+    data = { ...data, password: hashedPassword, role: "admin" };
     const user = await User.create(data);
     res.status(201).json({
       status: "success",
@@ -40,7 +40,7 @@ exports.login = async (req, res) => {
     const { phoneNumber, password } = req.body;
 
     const result = await User.findOne({ phoneNumber: phoneNumber });
-    if (!result) throw "Incorrect phone number or password";
+    if (!result) throw "No user found for this phone number";
 
     const unhashed = await bcrypt.compare(password, result.password);
     if (!unhashed) throw "Incorrect phone number or password";
