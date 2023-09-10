@@ -1,6 +1,7 @@
 const express = require("express");
 const truckDriverController = require("../controller/admin/truckDriverController");
 const vendorController = require("../controller/admin/vendorController");
+const productController = require("../controller/admin/productController");
 const truckDriverCreateValidator = require("../validator/truckDriverCreateValidator");
 const truckDriverUpdateValidator = require("../validator/truckDriverUpdateValidator");
 const vendorCreateValidator = require("../validator/vendorCreateValidator");
@@ -28,5 +29,16 @@ router
   .get(vendorController.getVendor)
   .patch(vendorUpdateValidator, vendorController.updateVendor)
   .delete(vendorController.deleteVendor);
+
+router
+  .route("/products")
+  .get(productController.getAllProducts)
+  .post(productController.createProduct);
+
+router
+  .route("/products/:id")
+  .get(productController.getProduct)
+  .patch(productController.updateProduct)
+  .delete(productController.deleteProduct);
 
 module.exports = router;

@@ -105,7 +105,6 @@ exports.deleteVendor = async (req, res) => {
   try {
     const id = req.params.id;
     const result = await Vendor.findByIdAndDelete(id);
-    console.log(result);
     if (!result) throw "No user vendor found for the ID";
 
     res.status(204).json({
