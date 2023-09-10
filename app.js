@@ -1,22 +1,16 @@
 const express = require("express");
-const mongooe = require("mongoose");
-require("dotenv").config();
+const userRouter = require("./routes/userRoutes");
 const app = express();
 
-const database = process.env.DATABASE.replace(
-  "<password>",
-  process.env.DB_PASSWORD
-);
-
-mongooe.connect(database).then(() => {
-  console.log("Database connected successfully");
-});
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("Hello World");
+  const { value } = req.body;
+  const result = /^[A-Z](?:\d[- ]*){14}$/.test(value);
+  res.send(result);
 });
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+app.use("/api/v1/user", userRouter);
+
+module.exports = app;
