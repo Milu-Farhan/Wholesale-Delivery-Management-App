@@ -2,7 +2,7 @@ const User = require("../models/userModel");
 
 exports.isPhonenumberValid = async (val, { req }) => {
   if (!val || !/^\d{10}$/.test(val)) {
-    throw new Error("Please enter a valid phone number");
+    throw new Error("Enter a valid phone number");
   }
   if (await User.findOne({ phoneNumber: val })) {
     {
