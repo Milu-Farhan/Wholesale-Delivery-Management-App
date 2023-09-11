@@ -4,6 +4,7 @@ const User = require("../models/userModel");
 const excludedPaths = ["/api/v1/user/login", "/api/v1/user/signup"];
 
 exports.checkAccessToken = async (req, res, next) => {
+  console.log(req.url);
   if (excludedPaths.includes(req.url)) return next();
 
   let token = req.headers.authorization;
@@ -46,6 +47,9 @@ exports.IsAdmin = async (req, res, next) => {
   if (excludedPaths.includes(req.url)) return next();
 
   if (req.user.role === "admin") return next();
+
+  if (req.user.role && req.url === /^\/api\/v1\/orders\/\d+$/.test(req.url))
+    return next();
 
   return res.status(403).json({
     status: "fail",

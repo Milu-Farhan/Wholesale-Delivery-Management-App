@@ -1,8 +1,9 @@
 const express = require("express");
 const userRouter = require("./routes/userRoutes");
 const adminRouter = require("./routes/adminRoutes");
-const authController = require("./controller/authController");
-const gloablErrorHandler = require("./controller/globalErrorController");
+const orderRouter = require("./routes/orderRoutes");
+const authController = require("./middlewares/authController");
+const gloablErrorHandler = require("./middlewares/globalErrorController");
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(authController.IsAdmin);
 
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/admin", adminRouter);
+app.use("/api/v1/orders", orderRouter);
 
 app.all("*", (req, res) => {
   res.status(404).json({
