@@ -13,11 +13,15 @@ const productSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
-  availableQuantity: {
+  stock: {
     type: Number,
     required: true,
   },
   catogory: {
+    type: String,
+    required: true,
+  },
+  subCatogory: {
     type: String,
     required: true,
   },

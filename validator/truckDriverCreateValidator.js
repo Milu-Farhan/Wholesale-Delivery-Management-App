@@ -1,5 +1,5 @@
 const { body } = require("express-validator");
-const customValidator = require("../utils/commonValidatorFunctions");
+const customValidator = require("../utils/customValidatorFunctions");
 
 const allowed_roles = ["driver"];
 

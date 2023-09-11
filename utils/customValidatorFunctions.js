@@ -1,4 +1,5 @@
 const User = require("../models/userModel");
+const Product = require("../models/productModel");
 
 exports.isPhonenumberValid = async (val, { req }) => {
   if (!val || !/^\d{10}$/.test(val)) {
@@ -28,6 +29,19 @@ exports.isMatchingPassword = (val, { req }) => {
   if (!req.body.password) return true;
   if (val !== req.body.password) {
     throw new Error("Passwords do not match");
+  }
+  return true;
+};
+
+exports.isProductExist = async (val, { req }) => {
+  if (!val) throw new Error("Name can't be empty");
+
+  if (await Product.findOne({ name: val })) {
+    {
+      throw new Error(
+        "Product already exist with this modal name. Please choose different one."
+      );
+    }
   }
   return true;
 };

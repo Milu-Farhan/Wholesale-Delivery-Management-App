@@ -1,5 +1,5 @@
 const { body } = require("express-validator");
-const customValidator = require("../utils/commonValidatorFunctions");
+const customValidator = require("../utils/customValidatorFunctions");
 
 validator = [
   body("name").notEmpty().withMessage("Name can't be empty"),

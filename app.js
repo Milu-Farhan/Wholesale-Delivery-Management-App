@@ -2,6 +2,7 @@ const express = require("express");
 const userRouter = require("./routes/userRoutes");
 const adminRouter = require("./routes/adminRoutes");
 const authController = require("./controller/authController");
+const gloablErrorHandler = require("./controller/globalErrorController");
 
 const app = express();
 
@@ -19,5 +20,7 @@ app.all("*", (req, res) => {
     message: `Requested page ${req.url} not found`,
   });
 });
+
+app.use(gloablErrorHandler);
 
 module.exports = app;

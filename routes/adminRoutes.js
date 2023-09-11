@@ -1,11 +1,17 @@
 const express = require("express");
+
 const truckDriverController = require("../controller/admin/truckDriverController");
 const vendorController = require("../controller/admin/vendorController");
 const productController = require("../controller/admin/productController");
+const imageUploader = require("../utils/imageUploadHandler");
+
 const truckDriverCreateValidator = require("../validator/truckDriverCreateValidator");
 const truckDriverUpdateValidator = require("../validator/truckDriverUpdateValidator");
 const vendorCreateValidator = require("../validator/vendorCreateValidator");
 const vendorUpdateValidator = require("../validator/vendorUpdateValidator");
+const createProductValidator = require("../validator/createProductValidator");
+const updateProductValidator = require("../validator/updateProductValidator");
+
 const router = express.Router();
 
 router
@@ -33,12 +39,18 @@ router
 router
   .route("/products")
   .get(productController.getAllProducts)
-  .post(productController.createProduct);
+  .post(createProductValidator, productController.createProduct);
+
+router.post(
+  "/products/imageUpload",
+  imageUploader.single("image"),
+  productController.uploadProductImage
+);
 
 router
   .route("/products/:id")
   .get(productController.getProduct)
-  .patch(productController.updateProduct)
+  .patch(updateProductValidator, productController.updateProduct)
   .delete(productController.deleteProduct);
 
 module.exports = router;
