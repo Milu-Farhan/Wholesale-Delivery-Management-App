@@ -61,7 +61,9 @@ exports.createTruckDriver = async (req, res) => {
     let data = { ...req.body };
     const hashedPassword = await bcrypt.hash(data.password, 10);
     data = { ...data, password: hashedPassword };
-    const truckDriver = await User.create(data);
+    const result = await User.create(data);
+    const { password, ...truckDriver } = result._doc;
+
     res.status(201).json({
       status: "success",
       data: {

@@ -46,6 +46,7 @@ exports.isProductExist = async (val, { req }) => {
   }
   return true;
 };
+
 exports.isVendorExist = async (val, { req }) => {
   if (!val) throw new Error("Name can't be empty");
 

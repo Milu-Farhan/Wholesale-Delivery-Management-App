@@ -1,5 +1,6 @@
 const Order = require("../models/orderModel");
 const Product = require("../models/productModel");
+const { validationResult } = require("express-validator");
 
 exports.getAllOrders = async (req, res) => {
   try {
@@ -42,51 +43,81 @@ exports.getOrder = async (req, res) => {
 };
 
 exports.createOrder = async (req, res) => {
-  const order = req.body.products; // Array of objects with product ID and quantity
-  // console.log(order);
-
-  // Collect unique product IDs from the order
-  let productIds = [];
-
-  order.forEach((item) => {
-    if (!productIds.includes(item.id)) productIds.push(item.id);
-  });
-
-  // Fetch all products in a single query
-  const products = await Product.find({ _id: { $in: productIds } });
-
-  // console.log(products);
-
-  const productsWithInsufficientStock = [];
-  let totalOrderSum = 0;
-
-  for (const item of order) {
-    const product = products.find((p) => p._id.toString() === item.id);
-    console.log(products);
-    console.log(product);
-    if (!product) {
-      // Handle the case where the product ID is not found in the database
-      continue;
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      let err = {};
+      errors.array().forEach((error) => {
+        err[error.path] = error.msg;
+      });
+      throw err;
     }
 
-    if (product.stock >= item.quantity) {
-      console.log();
-      totalOrderSum += product.price * item.quantity;
-    } else {
-      productsWithInsufficientStock.push({
-        productId: product._id,
-        productName: product.name,
-        availableStock: product.stock,
+    const productList = req.body.products;
+    const productIds = Array.from(new Set(productList.map((item) => item.id)));
+    const products = await Product.find({ _id: { $in: productIds } });
+    const updatedProductStocks = [];
+    const productsWithInsufficientStock = [];
+    let totalOrderSum = 0;
+
+    for (const item of productList) {
+      const product = products.find((p) => p._id.toString() === item.id);
+
+      if (!product) {
+        throw new Error("No products found with product IDs");
+      }
+
+      if (product.stock >= item.quantity) {
+        totalOrderSum += product.price * item.quantity;
+
+        const updatedStock = product.stock - item.quantity;
+        updatedProductStocks.push({
+          productId: product._id,
+          updatedStock: updatedStock,
+        });
+      } else {
+        productsWithInsufficientStock.push(product);
+      }
+    }
+
+    if (productsWithInsufficientStock.length) {
+      return res.status(400).json({
+        status: "fail",
+        message: "Insufficient stock for some products",
+        result: { productsWithInsufficientStock },
       });
     }
-  }
 
-  if (productsWithInsufficientStock.length > 0) {
-    res.status(400).json({
-      message: "Insufficient stock for some products",
-      productsWithInsufficientStock,
+    const productUpdates = updatedProductStocks.map(
+      ({ productId, updatedStock }) => {
+        return {
+          updateOne: {
+            filter: { _id: productId },
+            update: { $set: { stock: updatedStock } },
+          },
+        };
+      }
+    );
+
+    await Product.bulkWrite(productUpdates);
+
+    const order = await Order.create({
+      products,
+      truckDriver: req.body.truckDriver,
+      vendor: req.body.vendor,
+      collectedAmount: req.body.collectedAmount,
+      totalAmount: totalOrderSum,
     });
-  } else {
-    res.status(200).json({ message: "Order successful", totalOrderSum, order });
+
+    res.status(200).json({
+      status: "success",
+      result: order,
+    });
+  } catch (err) {
+    if (err.name === "CastError") err = "Incorrect ID provided";
+    res.status(400).json({
+      status: "fail",
+      error: err,
+    });
   }
 };

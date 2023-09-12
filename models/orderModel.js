@@ -13,10 +13,6 @@ const orderSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  deliveryStatus: {
-    type: String,
-    default: "undelivered",
-  },
   totalAmount: {
     type: Number,
     required: true,
