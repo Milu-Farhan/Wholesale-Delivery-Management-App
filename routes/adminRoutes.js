@@ -42,7 +42,7 @@ router
   .post(createProductValidator, productController.createProduct);
 
 router.post(
-  "/products/imageUpload",
+  "/products/image-upload",
   imageUploader.single("image"),
   productController.uploadProductImage
 );

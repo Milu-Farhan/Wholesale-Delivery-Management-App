@@ -30,6 +30,10 @@ const userSchema = new mongoose.Schema({
       values: ["admin", "driver"],
     },
   },
+  created: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const User = mongoose.model("User", userSchema);

@@ -7,6 +7,7 @@ const validator = [
     .optional()
     .notEmpty()
     .withMessage("Description can't be empty"),
+  body("brand").optional().notEmpty().withMessage("Brand name can't be empty"),
   body("price")
     .optional()
     .notEmpty()

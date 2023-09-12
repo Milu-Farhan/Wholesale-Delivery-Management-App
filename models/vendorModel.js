@@ -17,6 +17,10 @@ const vendorScehma = mongoose.Schema({
     type: Number,
     required: true,
   },
+  created: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Vendor = mongoose.model("Vendor", vendorScehma);

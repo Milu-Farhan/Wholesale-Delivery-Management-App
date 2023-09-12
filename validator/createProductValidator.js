@@ -4,6 +4,7 @@ const customValidator = require("../utils/customValidatorFunctions");
 const validator = [
   body("name").custom(customValidator.isProductExist),
   body("description").notEmpty().withMessage("Description can't be empty"),
+  body("brand").notEmpty().withMessage("Brand name can't be empty"),
   body("price").notEmpty().isNumeric().withMessage("Price must be a number"),
   body("stock")
     .notEmpty()

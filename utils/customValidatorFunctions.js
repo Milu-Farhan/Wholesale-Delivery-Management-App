@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const Product = require("../models/productModel");
+const Vendor = require("../models/vendorModel");
 
 exports.isPhonenumberValid = async (val, { req }) => {
   if (!val || !/^\d{10}$/.test(val)) {
@@ -41,6 +42,16 @@ exports.isProductExist = async (val, { req }) => {
       throw new Error(
         "Product already exist with this modal name. Please choose different one."
       );
+    }
+  }
+  return true;
+};
+exports.isVendorExist = async (val, { req }) => {
+  if (!val) throw new Error("Name can't be empty");
+
+  if (await Vendor.findOne({ name: val, phoneNumber: req.body.phoneNumber })) {
+    {
+      throw new Error("Vendor already exist with given name and phone number.");
     }
   }
   return true;

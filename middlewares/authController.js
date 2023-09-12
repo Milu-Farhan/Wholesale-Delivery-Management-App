@@ -4,7 +4,6 @@ const User = require("../models/userModel");
 const excludedPaths = ["/api/v1/user/login", "/api/v1/user/signup"];
 
 exports.checkAccessToken = async (req, res, next) => {
-  console.log(req.url);
   if (excludedPaths.includes(req.url)) return next();
 
   let token = req.headers.authorization;
