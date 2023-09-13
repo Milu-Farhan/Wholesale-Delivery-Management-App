@@ -133,7 +133,6 @@ exports.createOrder = async (req, res) => {
 
     await Product.bulkWrite(productUpdates);
     const result = await Order.create({
-      // products: productList,
       products: updatedProductList,
       truckDriver: data.truckDriver,
       vendor: data.vendor,
@@ -156,7 +155,6 @@ exports.createOrder = async (req, res) => {
     res.status(400).json({
       success: false,
       errorMessage: err,
-      err: err.stack,
     });
   }
 };

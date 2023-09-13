@@ -18,8 +18,8 @@ app.use("/api/v1/orders", orderRouter);
 
 app.all("*", (req, res) => {
   res.status(404).json({
-    status: "fail",
-    message: `Requested page ${req.url} not found`,
+    success: false,
+    errorMessage: `Requested page ${req.url} not found`,
   });
 });
 
