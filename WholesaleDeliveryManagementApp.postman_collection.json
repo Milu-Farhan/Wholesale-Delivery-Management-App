@@ -1,0 +1,843 @@
+{
+	"info": {
+		"_postman_id": "19b26743-b869-45ab-bfd1-7a5e4fb89e7f",
+		"name": "Wholesale Delivery Management App",
+		"description": "The Wholesale Delivery Management App is designed to facilitate the efficient distribution of  \ngoods from wholesalers to retail vendors. It enables truck drivers to manage orders and  \ntrack vendor-related information. The system is accessible by Admin and Truck Drivers (TD)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18121286"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Admin Signup",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "multipart/form-data; ",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/user/signup",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"signup"
+							]
+						},
+						"description": "**Request Body**\n\nname : String `required`\n\nphoneNumber : Number `required`\n\nemail : String `required`\n\npassword: String `required`\n\nconfirmPassword : String `required`"
+					},
+					"response": []
+				},
+				{
+					"name": "User Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = pm.response.json();\r",
+									"\r",
+									"// Extract the value you want from the JSON response\r",
+									"var extractedValue = responseBody.accesstoken; // Replace 'someKey' with the actual key\r",
+									"\r",
+									"// Set the environment variable\r",
+									"pm.environment.set(\"access_token\", extractedValue);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/user/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"login"
+							]
+						},
+						"description": "**Request Body**\n\nphoneNumber : Number `required`\n\npassword : String `required`"
+					},
+					"response": []
+				}
+			],
+			"description": "Using authentication APIs, administrators can register new accounts, and both admins and truck drivers can log in to their accounts to obtain access tokens."
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Product Management",
+					"item": [
+						{
+							"name": "Get All Products",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/admin/products/",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"products",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Single Product",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/admin/products/:id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"products",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Product Image Upload",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/admin/products/image-upload",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"products",
+										"image-upload"
+									]
+								},
+								"description": "**Request Body**\n\nimage : file `required`"
+							},
+							"response": []
+						},
+						{
+							"name": "Create New Product",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/admin/products/",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"products",
+										""
+									]
+								},
+								"description": "**Request Body**\n\nname : String `required`\n\ndescription : String `required`\n\nbrand : String `required`\n\nprice : Number`required`\n\nstock : Number`required`\n\ncatogory : String `required`\n\nsubCatogory: String `required`\n\nimage: String `required`"
+							},
+							"response": []
+						},
+						{
+							"name": "Update Product",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/admin/products/:id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"products",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": ""
+										}
+									]
+								},
+								"description": "**Request Body**\n\nname : String `optional`\n\ndescription : String `optional`\n\nbrand : String `optional`\n\nprice : Number `optional`\n\nstock : Number `optional`\n\ncatogory : String `optional`\n\nsubCatogory: String `optional`\n\nimage: String `optional`\n\n> **Note**  \nIn order to update the image name, upload the image first using the image upload API."
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Product",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/admin/products/:id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"products",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Using product management APIs, administrators can access, create, update, or delete products and upload product images.\n\n**Authorization:** `Required`\n\n**Permission:** `Admins`\n\n> **Important to note:**  \nProduct creation is handled using two APIs for efficiency. The product image upload API should be called first in order to obtain the uploaded image file, and only then can we proceed to call the product creation API."
+				},
+				{
+					"name": "Vendor Management",
+					"item": [
+						{
+							"name": "Get All Vendors",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/admin/vendors/",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"vendors",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Single Vendor",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/admin/vendors/:id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"vendors",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create New Vendor",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/admin/vendors/",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"vendors",
+										""
+									]
+								},
+								"description": "**Request Body**\n\nname: String `required`\n\nlocation : String `required`\n\nemail : String`required`\n\nphoneNumber : Number `required`"
+							},
+							"response": []
+						},
+						{
+							"name": "Update Vendor",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/admin/vendors/:id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"vendors",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": ""
+										}
+									]
+								},
+								"description": "**Request Body**\n\nname: String `optional`\n\nlocation : String `optional`\n\nemail : String `optional`\n\nphoneNumber : Number `optional`"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Vendor",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/admin/vendors/:id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"vendors",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Using vendor management APIs, administrators can access, create, update, or delete vendors.\n\n**Authorization:** `Required`\n\n**Permission:** `Admins`"
+				},
+				{
+					"name": "Truck Drivers Management",
+					"item": [
+						{
+							"name": "Get All Truck Drivers",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/admin/users",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Single Truck Driver",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman.",
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/admin/users/:id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create New Truck Driver",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/admin/users/",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"users",
+										""
+									]
+								},
+								"description": "**Request Body**\n\nname : String `required`\n\nphoneNumber : Number `required`\n\naddress : String `required`\n\npassword : String `required`\n\nconfirmPassword : String `required`\n\nrole : String `required`\n\nlicenseNumber : String `required`"
+							},
+							"response": []
+						},
+						{
+							"name": "Update Truck Driver",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/admin/users/:id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": ""
+										}
+									]
+								},
+								"description": "**Request Body**\n\nname : String `optional`\n\nphoneNumber : Number `optional`\n\naddress : String `optional`\n\npassword : String `optional`\n\nconfirmPassword : String `optional`\n\nrole : String `optional`\n\nlicenseNumber : String `optional`"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Truck Driver",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman.",
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/admin/users/:id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"admin",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Using truck driver management APIs, administrators can access, create, update, or delete truck drivers.\n\n**Authorization:** `Required`\n\n**Permission:** `Admins`"
+				}
+			],
+			"description": "These APIs are exclusively for administrators."
+		},
+		{
+			"name": "Order Management",
+			"item": [
+				{
+					"name": "Get All Orders",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/orders/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"orders",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Order",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/orders/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"orders",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Order",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/orders/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"orders",
+								""
+							]
+						},
+						"description": "**Request Body**\n\nproducts : Array of object \\[{id , quantity}\\] `required`\n\nvendor : String (id) `required`\n\ntruckDriver : String (id) `required`\n\ncollectedAmount : Number `required`\n\ncreatedBy : String (id) `required`"
+					},
+					"response": []
+				}
+			],
+			"description": "Using order management APIs, administrators and truck drivers can create new orders and access previous orders.\n\n**Authorization:** `Required`\n\n**Permission:** `Admins, Truck drivers`"
+		}
+	]
+}
