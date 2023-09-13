@@ -37,10 +37,10 @@ exports.isMatchingPassword = (val, { req }) => {
 exports.isProductExist = async (val, { req }) => {
   if (!val) throw new Error("Name can't be empty");
 
-  if (await Product.findOne({ name: val })) {
+  if (await Product.findOne({ name: val, brand: req.body.brand })) {
     {
       throw new Error(
-        "Product already exist with this modal name. Please choose different one."
+        "Product already exist with this modal name and brand. Please choose different one."
       );
     }
   }

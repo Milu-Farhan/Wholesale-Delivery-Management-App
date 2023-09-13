@@ -1,11 +1,12 @@
 const { validationResult } = require("express-validator");
+const ObjectId = require("mongoose").Types.ObjectId;
 const Product = require("../../models/productModel");
 
 exports.getAllProducts = async (req, res) => {
   try {
     const products = await Product.find();
     res.status(200).json({
-      status: "success",
+      success: true,
       results: products.length,
       data: {
         products,
@@ -13,8 +14,8 @@ exports.getAllProducts = async (req, res) => {
     });
   } catch (err) {
     res.status(400).json({
-      status: "fail",
-      error: err,
+      success: false,
+      errorMessage: err,
     });
   }
 };
@@ -22,21 +23,23 @@ exports.getAllProducts = async (req, res) => {
 exports.getProduct = async (req, res) => {
   try {
     const id = req.params.id;
+
+    if (!ObjectId.isValid(id)) throw "Incorrect product ID provided";
+
     const product = await Product.findById(id);
 
-    if (!product) throw "No vendor found for the ID";
+    if (!product) throw "No product found for the ID";
 
     res.status(200).json({
-      staus: "success",
+      success: true,
       data: {
         product,
       },
     });
   } catch (err) {
-    if (err.name === "CastError") err = "Incorrect ID provided";
     res.status(400).json({
-      status: "fail",
-      error: err,
+      success: false,
+      errorMessage: err,
     });
   }
 };
@@ -54,15 +57,15 @@ exports.createProduct = async (req, res) => {
 
     const product = await Product.create(req.body);
     res.status(201).json({
-      status: "success",
+      success: true,
       data: {
         product,
       },
     });
   } catch (err) {
     res.status(400).json({
-      status: "fail",
-      error: err,
+      success: false,
+      errorMessage: err,
     });
   }
 };
@@ -79,6 +82,9 @@ exports.updateProduct = async (req, res) => {
     }
 
     const id = req.params.id;
+
+    if (!ObjectId.isValid(id)) throw "Incorrect product ID provided";
+
     const updatedResult = await Product.findByIdAndUpdate(id, req.body, {
       new: true,
       validators: true,
@@ -87,16 +93,15 @@ exports.updateProduct = async (req, res) => {
     if (!updatedResult) throw "No product found for the ID";
 
     res.status(200).json({
-      status: "success",
+      success: true,
       data: {
         updatedResult,
       },
     });
   } catch (err) {
-    if (err.name === "CastError") err = "Incorrect ID provided";
     res.status(400).json({
-      status: "fail",
-      error: err,
+      success: false,
+      errorMessage: err,
     });
   }
 };
@@ -104,18 +109,21 @@ exports.updateProduct = async (req, res) => {
 exports.deleteProduct = async (req, res) => {
   try {
     const id = req.params.id;
+
+    if (!ObjectId.isValid(id)) throw "Incorrect product ID provided";
+
     const result = await Product.findByIdAndDelete(id);
     if (!result) throw "No user vendor found for the ID";
 
     res.status(204).json({
-      status: "success",
+      success: true,
       data: null,
     });
   } catch (err) {
     if (err.name === "CastError") err = "Incorrect ID provided";
     res.status(400).json({
-      status: "fail",
-      error: err,
+      success: false,
+      errorMessage: err,
     });
   }
 };
@@ -126,15 +134,15 @@ exports.uploadProductImage = (req, res, next) => {
       throw "No image was uploaded. Please upload a image";
     }
     res.status(200).json({
-      status: "success",
+      success: true,
       data: {
         filename: req.file.filename,
       },
     });
   } catch (err) {
     res.status(400).json({
-      status: "fail",
-      error: err,
+      success: false,
+      errorMessage: err,
     });
   }
 };

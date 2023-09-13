@@ -1,7 +1,8 @@
 const { body } = require("express-validator");
 const customValidator = require("../utils/customValidatorFunctions");
+const { roles } = require("../config/config");
 
-const allowed_roles = ["driver", "admin"];
+const allowed_roles = [roles.truckDriver];
 
 validator = [
   body("name").optional().notEmpty().withMessage("Name can't be empty"),

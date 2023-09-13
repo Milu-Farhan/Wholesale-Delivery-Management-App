@@ -1,7 +1,6 @@
 const multer = require("multer");
 const path = require("path");
-
-const allowedExtensions = [".jpg", ".jpeg", ".png", ".gif"];
+const { allowedImageExt } = require("../config/config");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -19,7 +18,7 @@ const storage = multer.diskStorage({
 
 const filter = (req, file, cb) => {
   const fileExt = path.extname(file.originalname).toLowerCase();
-  if (allowedExtensions.includes(fileExt)) {
+  if (allowedImageExt.includes(fileExt)) {
     cb(null, true);
   } else {
     cb(
@@ -34,7 +33,6 @@ module.exports = multer({
   storage: storage,
   fileFilter: filter,
   onError: function (err, next) {
-    console.log("error", err);
     next(err);
   },
 });

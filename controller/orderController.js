@@ -1,21 +1,27 @@
+const { validationResult } = require("express-validator");
+const ObjectId = require("mongoose").Types.ObjectId;
 const Order = require("../models/orderModel");
 const Product = require("../models/productModel");
-const { validationResult } = require("express-validator");
 
 exports.getAllOrders = async (req, res) => {
   try {
-    const order = await Order.find();
+    const orders = await Order.find()
+      .populate("products.product")
+      .populate("truckDriver", "-password")
+      .populate("vendor")
+      .populate("createdBy", "-password");
+
     res.status(200).json({
-      status: "success",
-      results: order.length,
+      success: true,
+      results: orders.length,
       data: {
-        order,
+        orders,
       },
     });
   } catch (err) {
     res.status(400).json({
-      status: "fail",
-      error: err,
+      success: false,
+      errorMessage: err,
     });
   }
 };
@@ -23,21 +29,27 @@ exports.getAllOrders = async (req, res) => {
 exports.getOrder = async (req, res) => {
   try {
     const id = req.params.id;
-    const order = await Order.findById(id);
+
+    if (!ObjectId.isValid(id)) throw "Incorrect order ID provided";
+
+    const order = await Order.findById(id)
+      .populate("products.product")
+      .populate("truckDriver", "-password")
+      .populate("vendor")
+      .populate("createdBy", "-password");
 
     if (!order) throw "No order found for the ID";
 
     res.status(200).json({
-      staus: "success",
+      success: true,
       data: {
         order,
       },
     });
   } catch (err) {
-    if (err.name === "CastError") err = "Incorrect ID provided";
     res.status(400).json({
-      status: "fail",
-      error: err,
+      success: false,
+      errorMessage: err,
     });
   }
 };
@@ -53,8 +65,23 @@ exports.createOrder = async (req, res) => {
       throw err;
     }
 
-    const productList = req.body.products;
-    const productIds = Array.from(new Set(productList.map((item) => item.id)));
+    const data = req.body;
+
+    if (!ObjectId.isValid(data.truckDriver))
+      throw "Incorrect truck driver ID provided";
+    if (!ObjectId.isValid(data.vendor)) throw "Incorrect vendor ID provided";
+    if (!ObjectId.isValid(data.createdBy))
+      throw "Incorrect created user ID provided";
+
+    const productList = data.products;
+    const productIds = Array.from(
+      new Set(
+        productList.map((item) => {
+          if (!ObjectId.isValid(item.id)) throw "Incorrect product ID provided";
+          return item.id;
+        })
+      )
+    );
     const products = await Product.find({ _id: { $in: productIds } });
     const updatedProductStocks = [];
     const productsWithInsufficientStock = [];
@@ -64,7 +91,7 @@ exports.createOrder = async (req, res) => {
       const product = products.find((p) => p._id.toString() === item.id);
 
       if (!product) {
-        throw new Error("No products found with product IDs");
+        throw `No products found with product ID: ${item.id}`;
       }
 
       if (product.stock >= item.quantity) {
@@ -82,9 +109,9 @@ exports.createOrder = async (req, res) => {
 
     if (productsWithInsufficientStock.length) {
       return res.status(400).json({
-        status: "fail",
+        success: false,
         message: "Insufficient stock for some products",
-        result: { productsWithInsufficientStock },
+        errorMessage: { productsWithInsufficientStock },
       });
     }
 
@@ -99,25 +126,37 @@ exports.createOrder = async (req, res) => {
       }
     );
 
-    await Product.bulkWrite(productUpdates);
+    const updatedProductList = productList.map((product) => ({
+      product: product.id,
+      quantity: product.quantity,
+    }));
 
-    const order = await Order.create({
-      products,
-      truckDriver: req.body.truckDriver,
-      vendor: req.body.vendor,
-      collectedAmount: req.body.collectedAmount,
+    await Product.bulkWrite(productUpdates);
+    const result = await Order.create({
+      // products: productList,
+      products: updatedProductList,
+      truckDriver: data.truckDriver,
+      vendor: data.vendor,
+      collectedAmount: data.collectedAmount,
       totalAmount: totalOrderSum,
+      createdBy: data.createdBy,
     });
 
+    const order = await Order.findById(result._id)
+      .populate("products.product")
+      .populate("truckDriver", "-password")
+      .populate("vendor")
+      .populate("createdBy", "-password");
+
     res.status(200).json({
-      status: "success",
+      success: true,
       result: order,
     });
   } catch (err) {
-    if (err.name === "CastError") err = "Incorrect ID provided";
     res.status(400).json({
-      status: "fail",
-      error: err,
+      success: false,
+      errorMessage: err,
+      err: err.stack,
     });
   }
 };

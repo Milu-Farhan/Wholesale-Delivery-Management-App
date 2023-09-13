@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-const mongooe = require("mongoose");
+const mongoose = require("mongoose");
 const app = require("./app");
 
 const database = process.env.DATABASE.replace(
@@ -8,7 +8,7 @@ const database = process.env.DATABASE.replace(
   process.env.DB_PASSWORD
 );
 
-mongooe.connect(database).then(() => {
+mongoose.connect(database).then(() => {
   console.log("Database connected successfully");
 });
 

@@ -1,14 +1,16 @@
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
+const ObjectId = require("mongoose").Types.ObjectId;
 const User = require("../../models/userModel");
+const { roles } = require("../../config/config");
 
 exports.getAllTruckDrivers = async (req, res) => {
   try {
-    const users = await User.find({ role: { $ne: "admin" } }).select(
+    const users = await User.find({ role: roles.truckDriver }).select(
       "-password"
     );
     res.status(200).json({
-      status: "success",
+      success: true,
       results: users.length,
       data: {
         users,
@@ -16,8 +18,8 @@ exports.getAllTruckDrivers = async (req, res) => {
     });
   } catch (err) {
     res.status(400).json({
-      status: "fail",
-      error: err,
+      status: false,
+      errorMessage: err,
     });
   }
 };
@@ -25,24 +27,26 @@ exports.getAllTruckDrivers = async (req, res) => {
 exports.getTruckDriver = async (req, res) => {
   try {
     const id = req.params.id;
+
+    if (!ObjectId.isValid(id)) throw "Incorrect truck driver ID provided";
+
     const truckDriver = await User.findOne({
       _id: id,
-      role: { $ne: "admin" },
+      role: roles.truckDriver,
     }).select("-password");
 
     if (!truckDriver) throw "No truck driver found for the ID";
 
     res.status(200).json({
-      staus: "success",
+      success: true,
       data: {
         truckDriver,
       },
     });
   } catch (err) {
-    if (err.name === "CastError") err = "Incorrect ID provided";
     res.status(400).json({
-      status: "fail",
-      error: err,
+      success: false,
+      errorMessage: err,
     });
   }
 };
@@ -65,15 +69,15 @@ exports.createTruckDriver = async (req, res) => {
     const { password, ...truckDriver } = result._doc;
 
     res.status(201).json({
-      status: "success",
+      success: true,
       data: {
         truckDriver,
       },
     });
   } catch (err) {
     res.status(400).json({
-      status: "fail",
-      error: err,
+      success: false,
+      errorMessage: err,
     });
   }
 };
@@ -90,31 +94,41 @@ exports.updateTruckDriver = async (req, res) => {
     }
 
     const id = req.params.id;
+    let data = { ...req.body };
+
+    if (!ObjectId.isValid(id)) throw "Incorrect truck driver ID provided";
+
+    if (data.password) {
+      const hashedPassword = await bcrypt.hash(data.password, 10);
+      data = { ...data, password: hashedPassword };
+    }
+
     const updatedResult = await User.findOneAndUpdate(
       {
         _id: id,
-        role: { $ne: "admin" },
+        role: roles.truckDriver,
       },
-      req.body,
+      data,
       {
         new: true,
         validators: true,
       }
     );
 
+    const { password, ...user } = updatedResult._doc;
+
     if (!updatedResult) throw "No truck driver found for the ID";
 
     res.status(200).json({
-      status: "success",
+      success: true,
       data: {
-        updatedResult,
+        user,
       },
     });
   } catch (err) {
-    if (err.name === "CastError") err = "Incorrect ID provided";
     res.status(400).json({
-      status: "fail",
-      error: err,
+      success: false,
+      errorMessage: err,
     });
   }
 };
@@ -122,21 +136,23 @@ exports.updateTruckDriver = async (req, res) => {
 exports.deleteTruckDriver = async (req, res) => {
   try {
     const id = req.params.id;
+
+    if (!ObjectId.isValid(id)) throw "Incorrect truck driver ID provided";
+
     const result = await User.deleteOne({
       _id: id,
-      role: { $ne: "admin" },
+      role: roles.truckDriver,
     });
     if (!result.deletedCount) throw "No user truck driver found for the ID";
 
     res.status(204).json({
-      status: "success",
+      success: false,
       data: null,
     });
   } catch (err) {
-    if (err.name === "CastError") err = "Incorrect ID provided";
     res.status(400).json({
-      status: "fail",
-      error: err,
+      success: false,
+      errorMessage: err,
     });
   }
 };

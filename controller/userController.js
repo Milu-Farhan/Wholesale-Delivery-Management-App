@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
+const { roles } = require("../config/config");
 const User = require("../models/userModel");
 
 exports.signup = async (req, res) => {
@@ -16,18 +17,18 @@ exports.signup = async (req, res) => {
 
     let data = { ...req.body };
     const hashedPassword = await bcrypt.hash(data.password, 10);
-    data = { ...data, password: hashedPassword, role: "admin" };
+    data = { ...data, password: hashedPassword, role: roles.admin };
     const user = await User.create(data);
     res.status(201).json({
-      status: "success",
+      success: true,
       data: {
         user,
       },
     });
   } catch (err) {
     res.status(400).json({
-      status: "fail",
-      error: err,
+      success: false,
+      errorMessage: err,
     });
   }
 };
@@ -49,18 +50,18 @@ exports.login = async (req, res) => {
       { user_id: result.id, role: result.role },
       process.env.JWT_SECRET,
       {
-        expiresIn: "1w",
+        expiresIn: "1d",
       }
     );
 
     res.status(200).send({
-      status: "success",
+      success: true,
       accesstoken: token,
     });
   } catch (err) {
     return res.status(400).json({
-      status: "fail",
-      message: err,
+      success: false,
+      errorMessage: err,
     });
   }
 };
