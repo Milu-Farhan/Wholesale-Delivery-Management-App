@@ -9,7 +9,7 @@ Using authentication APIs, administrators can register new accounts, and both ad
 
 &nbsp;
 
-```POST``` **Admin Signup** `{{base_url}}/api/v1/user/signup`
+```POST``` **Admin Signup** `/api/v1/user/signup`
 
 ###### Request Body
 **name** : String `required` </br>
@@ -20,7 +20,7 @@ Using authentication APIs, administrators can register new accounts, and both ad
 
 &nbsp;
 
-```POST``` **Admin Login** `{{base_url}}/api/v1/user/login`
+```POST``` **Admin Login** `/api/v1/user/login`
 
 ###### Request Body
 **phoneNumber** : Number `required` </br>
@@ -36,14 +36,14 @@ Using truck driver management APIs, administrators can access, create, update, o
 
 &nbsp;
 
-```GET``` **Get All Truck Drivers** `{{base_url}}/api/v1/admin/users`
+```GET``` **Get All Truck Drivers** `/api/v1/admin/users`
 
 ###### Request Headers
 **Authorization** : Bearer {{access_token}}
 
 &nbsp;
 
-```GET``` **Get Single Truck Driver** `{{base_url}}/api/v1/admin/users/:id`
+```GET``` **Get Single Truck Driver** `/api/v1/admin/users/:id`
 
 ###### Request Headers
 **Authorization** : Bearer {{access_token}}
@@ -53,7 +53,7 @@ Using truck driver management APIs, administrators can access, create, update, o
 
 &nbsp;
 
-```POST``` **Create New Truck Driver** `{{base_url}}/api/v1/admin/users`
+```POST``` **Create New Truck Driver** `/api/v1/admin/users`
 
 ###### Request Headers
 **Authorization** : Bearer {{access_token}}
@@ -69,7 +69,7 @@ Using truck driver management APIs, administrators can access, create, update, o
 
 &nbsp;
 
-```PATCH``` **Update Truck Driver** `{{base_url}}/api/v1/admin/users/:id`
+```PATCH``` **Update Truck Driver** `/api/v1/admin/users/:id`
 
 ###### Request Headers
 **Authorization** : Bearer {{access_token}}
@@ -88,7 +88,7 @@ Using truck driver management APIs, administrators can access, create, update, o
 
 &nbsp;
 
-```DELETE``` **Delete Truck Driver** `{{base_url}}/api/v1/admin/users/:id`
+```DELETE``` **Delete Truck Driver** `/api/v1/admin/users/:id`
 
 ###### Request Headers
 **Authorization** : Bearer {{access_token}}
@@ -109,14 +109,14 @@ Product creation is handled using two APIs for efficiency. The product image upl
 
 &nbsp;
 
-```GET``` **Get All Products** `{{base_url}}/api/v1/admin/products`
+```GET``` **Get All Products** `/api/v1/admin/products`
 
 ###### Request Headers
 **Authorization** : Bearer {{access_token}}
 
 &nbsp;
 
-```GET``` **Get Single Product** `{{base_url}}/api/v1/admin/products/:id`
+```GET``` **Get Single Product** `/api/v1/admin/products/:id`
 
 ###### Request Headers
 **Authorization** : Bearer {{access_token}}
@@ -126,7 +126,7 @@ Product creation is handled using two APIs for efficiency. The product image upl
 
 &nbsp;
 
-```POST``` **Product Image Upload** `{{base_url}}/api/v1/admin/products/image-upload`
+```POST``` **Product Image Upload** `/api/v1/admin/products/image-upload`
 
 ###### Request Headers
 **Authorization** : Bearer {{access_token}}
@@ -136,7 +136,7 @@ Product creation is handled using two APIs for efficiency. The product image upl
 
 &nbsp;
 
-```POST``` **Create New Product** `{{base_url}}/api/v1/admin/products/`
+```POST``` **Create New Product** `/api/v1/admin/products/`
 
 ###### Request Headers
 **Authorization** : Bearer {{access_token}}
@@ -152,11 +152,11 @@ Product creation is handled using two APIs for efficiency. The product image upl
 **image** : String `required`  -- *filename getting from image upload API*
 
 >**Note:**
-In order to create the product, upload the product image first using the image upload API.
+In order to create the product, upload the product image first using the product image upload API.
 
 &nbsp;
 
-```PATCH``` **Update Product** `{{base_url}}/api/v1/admin/products/:id`
+```PATCH``` **Update Product** `/api/v1/admin/products/:id`
 
 ###### Request Headers
 **Authorization** : Bearer {{access_token}}
@@ -175,11 +175,11 @@ In order to create the product, upload the product image first using the image u
 **image** : String `optional`  -- *filename getting from image upload API*
 
 >**Note:**
-In order to create the product, upload the product image first using the image upload API.
+In order to create the product, upload the product image first using the product image upload API.
 
 &nbsp;
 
-```DELETE``` **Delete Product** `{{base_url}}/api/v1/admin/products/:id`
+```DELETE``` **Delete Product** `/api/v1/admin/products/:id`
 
 ###### Request Headers
 **Authorization** : Bearer {{access_token}}
@@ -197,14 +197,14 @@ Using vendor management APIs, administrators can access, create, update, or dele
 
 &nbsp;
 
-```GET``` **Get All Vendors** `{{base_url}}/api/v1/admin/vendors`
+```GET``` **Get All Vendors** `/api/v1/admin/vendors`
 
 ###### Request Headers
 **Authorization** : Bearer {{access_token}}
 
 &nbsp;
 
-```GET``` **Get Single Vendor** `{{base_url}}/api/v1/admin/vendors/:id`
+```GET``` **Get Single Vendor** `/api/v1/admin/vendors/:id`
 
 ###### Request Headers
 **Authorization** : Bearer {{access_token}}
@@ -214,7 +214,7 @@ Using vendor management APIs, administrators can access, create, update, or dele
 
 &nbsp;
 
-```POST``` **Create New Vendor** `{{base_url}}/api/v1/admin/vendors/`
+```POST``` **Create New Vendor** `/api/v1/admin/vendors/`
 
 ###### Request Headers
 **Authorization** : Bearer {{access_token}}
@@ -227,7 +227,7 @@ Using vendor management APIs, administrators can access, create, update, or dele
 
 &nbsp;
 
-```PATCH``` **Update Vendor** `{{base_url}}/api/v1/admin/vendors/:id`
+```PATCH``` **Update Vendor** `/api/v1/admin/vendors/:id`
 
 ###### Request Headers
 **Authorization** : Bearer {{access_token}}
@@ -243,7 +243,7 @@ Using vendor management APIs, administrators can access, create, update, or dele
 
 &nbsp;
 
-```DELETE``` **Delete Product** `{{base_url}}/api/v1/admin/vendors/:id`
+```DELETE``` **Delete Product** `api/v1/admin/vendors/:id`
 
 ###### Request Headers
 **Authorization** : Bearer {{access_token}}
@@ -261,14 +261,14 @@ Using order management APIs, administrators and truck drivers can create new ord
 
 &nbsp;
 
-```GET``` **Get All Orders** `{{base_url}}/api/v1/orders/`
+```GET``` **Get All Orders** `/api/v1/orders/`
 
 ###### Request Headers
 **Authorization** : Bearer {{access_token}}
 
 &nbsp;
 
-```GET``` **Get Single Orders** `{{base_url}}/api/v1/admin/orders/:id`
+```GET``` **Get Single Orders** `/api/v1/admin/orders/:id`
 
 ###### Request Headers
 **Authorization** : Bearer {{access_token}}
@@ -278,7 +278,7 @@ Using order management APIs, administrators and truck drivers can create new ord
 
 &nbsp;
 
-```POST``` **Create New Order** `{{base_url}}/api/v1/admin/orders/`
+```POST``` **Create New Order** `/api/v1/admin/orders/`
 
 ###### Request Headers
 **Authorization** : Bearer {{access_token}}
@@ -293,4 +293,4 @@ Using order management APIs, administrators and truck drivers can create new ord
 &nbsp;
 ------------
 
-Demo : [click here](https://wholesale-delivery-management-app.onrender.com/api/v1/user/login "click here")
+Demo : [click here](https://wholesale-delivery-management-app.onrender.com/api/v1/orders "click here")
