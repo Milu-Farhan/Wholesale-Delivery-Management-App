@@ -1,5 +1,8 @@
+#### Documentation
+
 # Wholesale Delivery Management App
 The Wholesale Delivery Management App is designed to facilitate the efficient distribution of goods from wholesalers to retail vendors. It enables truck drivers to manage orders and track vendor-related information. The system is accessible by Admin and Truck Drivers (TD)
+
 
 ### Authentication
 Using authentication APIs, administrators can register new accounts, and both admins and truck drivers can log in to their accounts to obtain access tokens.
